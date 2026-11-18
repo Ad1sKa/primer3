@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IRON PULSE — фитнес-клуб в Минске | пр-т Победителей, 100</title>
+  <meta name="description" content="IRON PULSE — современный фитнес-клуб в Минске: 2 500 м² зала, доступ 24/7, более 40 тренажёров Technogym. Запишитесь на бесплатную гостевую тренировку.">
+  <meta name="theme-color" content="#0D0F12">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================
+       1. ДИЗАЙН-СИСТЕМА
+       ========================================================== */
+    :root {
+      /* Цвета */
+      --bg: #0D0F12;
+      --bg-alt: #101319;
+      --surface: #16191F;
+      --surface-2: #1D2129;
+      --border: #272C36;
+      --border-strong: #363C48;
+      --text: #F2F4F7;
+      --text-muted: #9AA3B2;
+      --text-dim: #6B7384;
+      --accent: #C8FF2E;          /* кислотный лайм */
+      --accent-hover: #D9FF6B;
+      --accent-ink: #0D0F12;      /* текст на акценте */
+      --accent-soft: rgba(200, 255, 46, .12);
+      --danger: #FF5C5C;
+      --success: #4ADE80;
+
+      /* Типографика */
+      --font-head: 'Unbounded', 'Montserrat', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+      /* Геометрия */
+      --container: 1200px;
+      --gutter: clamp(16px, 4vw, 32px);
+      --radius-sm: 8px;
+      --radius: 14px;
+      --radius-lg: 22px;
+      --header-h: 72px;
+      --section-y: clamp(72px, 10vw, 128px);
+
+      /* Эффекты */
+      --shadow: 0 18px 50px rgba(0, 0, 0, .45);
+      --glow: 0 0 0 1px var(--accent), 0 10px 40px rgba(200, 255, 46, .22);
+      --ease: cubic-bezier(.2, .7, .2, 1);
+      --t: .25s var(--ease);
+    }
+
+    /* ---------- Reset / база ---------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body.is-locked { overflow: hidden; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    h1, h2, h3, h4 {
+      margin: 0;
+      font-family: var(--font-head);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -.01em;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+    p { margin: 0; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    [id] { scroll-margin-top: calc(var(--header-h) + 8px); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+    ::selection { background: var(--accent); color: var(--accent-ink); }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+    .skip-link {
+      position: fixed; left: 12px; top: -60px; z-index: 200;
+      background: var(--accent); color: var(--accent-ink);
+      padding: 10px 16px; border-radius: var(--radius-sm); font-weight: 700;
+      transition: top var(--t);
+    }
+    .skip-link:focus { top: 12px; }
+
+    /* ---------- Контейнеры и сетки ---------- */
+    .container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+    .container--narrow { max-width: 860px; }
+
+    .grid { display: grid; gap: clamp(16px, 2.2vw, 28px); }
+    .grid--2 { grid-template-columns: repeat(2, 1fr); }
+    .grid--3 { grid-template-columns: repeat(3, 1fr); }
+    .grid--4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 1024px) { .grid--4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 900px)  { .grid--3 { grid-template-columns: 1fr; } }
+    @media (max-width: 640px)  { .grid--2, .grid--4 { grid-template-columns: 1fr; } }
+
+    /* ---------- Секции ---------- */
+    .section { padding-block: var(--section-y); position: relative; }
+    .section--alt { background: var(--bg-alt); border-block: 1px solid var(--border); }
+    .section__head { max-width: 760px; margin-bottom: clamp(32px, 5vw, 56px); }
+    .section__head--center { margin-inline: auto; text-align: center; }
+    .section__eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px;
+    }
+    .section__eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--accent); }
+    .section__title { font-size: clamp(1.7rem, 4vw, 2.9rem); }
+    .section__lead { margin-top: 16px; color: var(--text-muted); font-size: 1.05rem; max-width: 60ch; }
+    .section__head--center .section__lead { margin-inline: auto; }
+    .section__slot { min-height: 0; }       /* контейнер под будущий контент */
+
+    .accent { color: var(--accent); }
+
+    /* ---------- Кнопки ---------- */
+    .btn {
+      --btn-bg: var(--accent); --btn-fg: var(--accent-ink); --btn-bd: var(--accent);
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 14px 26px; min-height: 48px;
+      background: var(--btn-bg); color: var(--btn-fg);
+      border: 1.5px solid var(--btn-bd); border-radius: var(--radius-sm);
+      font-family: var(--font-body); font-size: .92rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
+      transition: transform var(--t), background var(--t), box-shadow var(--t), color var(--t), border-color var(--t);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--glow); background: var(--accent-hover); border-color: var(--accent-hover); }
+    .btn:active { transform: translateY(0); }
+    .btn svg { width: 18px; height: 18px; flex: none; }
+    .btn--ghost { --btn-bg: transparent; --btn-fg: var(--text); --btn-bd: var(--border-strong); }
+    .btn--ghost:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); box-shadow: none; }
+    .btn--dark { --btn-bg: var(--surface-2); --btn-fg: var(--text); --btn-bd: var(--surface-2); }
+    .btn--dark:hover { background: var(--border); border-color: var(--border); box-shadow: none; }
+    .btn--sm { padding: 10px 18px; min-height: 40px; font-size: .8rem; }
+    .btn--lg { padding: 18px 34px; min-height: 58px; font-size: 1rem; }
+    .btn--block { width: 100%; }
+    .btn[disabled] { opacity: .5; pointer-events: none; }
+
+    /* ---------- Бейджи ---------- */
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      background: var(--accent-soft); color: var(--accent);
+      border: 1px solid rgba(200, 255, 46, .3);
+      font-size: .74rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .badge--solid { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+    .badge--outline { background: transparent; color: var(--text-muted); border-color: var(--border-strong); }
+    .badge--dot::before {
+      content: ""; width: 7px; height: 7px; border-radius: 50%;
+      background: currentColor; box-shadow: 0 0 0 0 currentColor; animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(200, 255, 46, .55); }
+      70% { box-shadow: 0 0 0 9px rgba(200, 255, 46, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(200, 255, 46, 0); }
+    }
+
+    /* ---------- Карточки ---------- */
+    .card {
+      position: relative; display: flex; flex-direction: column; gap: 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: clamp(22px, 3vw, 32px);
+      transition: transform var(--t), border-color var(--t), box-shadow var(--t);
+    }
+    .card--hover:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: var(--shadow); }
+    .card--accent { border-color: var(--accent); box-shadow: var(--glow); }
+    .card--flat { background: transparent; }
+    .card__media {
+      margin: calc(clamp(22px, 3vw, 32px) * -1) calc(clamp(22px, 3vw, 32px) * -1) 6px;
+      aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius-lg) var(--radius-lg) 0 0; background: var(--surface-2);
+    }
+    .card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+    .card--hover:hover .card__media img { transform: scale(1.06); }
+    .card__icon {
+      width: 52px; height: 52px; display: grid; place-items: center;
+      border-radius: var(--radius); background: var(--accent-soft); color: var(--accent);
+    }
+    .card__icon svg { width: 26px; height: 26px; }
+    .card__title { font-size: 1.15rem; }
+    .card__text { color: var(--text-muted); font-size: .95rem; }
+    .card__meta { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+    .card__tag { position: absolute; top: 18px; right: 18px; }
+
+    /* ---------- Списки, цены, переключатель (для будущих секций) ---------- */
+    .list-check li { position: relative; padding-left: 28px; color: var(--text-muted); font-size: .95rem; }
+    .list-check li + li { margin-top: 10px; }
+    .list-check li::before {
+      content: ""; position: absolute; left: 0; top: .35em; width: 16px; height: 16px;
+      background: var(--accent);
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 6 9 17l-5-5' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+              mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 6 9 17l-5-5' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+    .price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .price__value { font-family: var(--font-head); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900; line-height: 1; }
+    .price__unit { color: var(--text-muted); font-size: .9rem; }
+    .price__old { color: var(--text-dim); text-decoration: line-through; font-size: 1rem; }
+
+    .switch {
+      display: inline-flex; padding: 4px; gap: 4px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    }
+    .switch__btn {
+      padding: 10px 22px; border: 0; border-radius: 999px; background: transparent;
+      color: var(--text-muted); font-weight: 600; font-size: .88rem; letter-spacing: .04em;
+      transition: background var(--t), color var(--t);
+    }
+    .switch__btn.is-active, .switch__btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+    .stat { display: flex; flex-direction: column; gap: 4px; }
+    .stat__value { font-family: var(--font-head); font-weight: 900; font-size: clamp(1.6rem, 3.4vw, 2.5rem); line-height: 1; color: var(--text); }
+    .stat__value .accent { font-size: .6em; margin-left: 4px; }
+    .stat__label { color: var(--text-muted); font-size: .85rem; }
+
+    .avatar { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); background: var(--surface-2); }
+    .chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 8px 14px; border-radius: 999px; font-size: .82rem; font-weight: 500;
+      background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted);
+    }
+
+    /* ---------- Формы ---------- */
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field__label { font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+    .input, .select, .textarea {
+      width: 100%; min-height: 50px; padding: 13px 16px;
+      background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text); transition: border-color var(--t), box-shadow var(--t);
+    }
+    .input::placeholder, .textarea::placeholder { color: var(--text-dim); }
+    .input:hover, .select:hover, .textarea:hover { border-color: var(--border-strong); }
+    .input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .select {
+      appearance: none; padding-right: 44px; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239AA3B2' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; background-size: 18px;
+    }
+    .select option { background: var(--surface); color: var(--text); }
+    .textarea { min-height: 110px; resize: vertical; }
+    .field.has-error .input, .field.has-error .select { border-color: var(--danger); }
+    .field.has-error .input:focus, .field.has-error .select:focus { box-shadow: 0 0 0 3px rgba(255, 92, 92, .18); }
+    .field__error { min-height: 1.1em; font-size: .8rem; color: var(--danger); }
+
+    .range { width: 100%; accent-color: var(--accent); height: 28px; cursor: pointer; }
+    .check { display: flex; align-items: flex-start; gap: 12px; font-size: .85rem; color: var(--text-muted); cursor: pointer; }
+    .check input { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--accent); cursor: pointer; }
+    .check a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+    .field.has-error .check { color: var(--danger); }
+
+    .result {
+      padding: 22px; border-radius: var(--radius); background: var(--accent-soft);
+      border: 1px dashed rgba(200, 255, 46, .4);
+    }
+    .result__value { font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; color: var(--accent); }
+
+    /* ==========================================================
+       2. ШАПКА
+       ========================================================== */
+    .header {
+      position: fixed; inset: 0 0 auto 0; z-index: 100; height: var(--header-h);
+      display: flex; align-items: center;
+      background: linear-gradient(180deg, rgba(13, 15, 18, .85), rgba(13, 15, 18, 0));
+      border-bottom: 1px solid transparent;
+      transition: background var(--t), border-color var(--t), backdrop-filter var(--t);
+    }
+    .header.is-scrolled, .header.is-open {
+      background: rgba(13, 15, 18, .92);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+      border-bottom-color: var(--border);
+    }
+    .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+
+    .logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: 900; font-size: 1.1rem; letter-spacing: .02em; text-transform: uppercase; z-index: 2; }
+    .logo__mark { width: 36px; height: 36px; flex: none; }
+    .logo b { color: var(--accent); font-weight: 900; }
+
+    .nav__list { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 36px); }
+    .nav__link {
+      position: relative; padding: 8px 0; font-size: .86rem; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted);
+      transition: color var(--t);
+    }
+    .nav__link::after {
+      content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 100%;
+      background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform var(--t);
+    }
+    .nav__link:hover, .nav__link.is-active { color: var(--text); }
+    .nav__link:hover::after, .nav__link.is-active::after { transform: scaleX(1); }
+    .nav__cta-mobile { display: none; }
+
+    .header__actions { display: flex; align-items: center; gap: 12px; }
+
+    .burger {
+      display: none; position: relative; width: 46px; height: 46px; padding: 0;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); z-index: 2;
+    }
+    .burger span {
+      position: absolute; left: 12px; right: 12px; height: 2px; background: var(--text); border-radius: 2px;
+      transition: transform var(--t), opacity var(--t), top var(--t);
+    }
+    .burger span:nth-child(1) { top: 16px; }
+    .burger span:nth-child(2) { top: 22px; }
+    .burger span:nth-child(3) { top: 28px; }
+    .burger[aria-expanded="true"] span:nth-child(1) { top: 22px; transform: rotate(45deg); background: var(--accent); }
+    .burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .burger[aria-expanded="true"] span:nth-child(3) { top: 22px; transform: rotate(-45deg); background: var(--accent); }
+
+    @media (max-width: 960px) {
+      .burger { display: block; }
+      .header__cta { display: none; }
+      .nav {
+        position: fixed; inset: var(--header-h) 0 0 0; z-index: 1;
+        padding: 28px var(--gutter) 40px; overflow-y: auto;
+        background: rgba(13, 15, 18, .98);
+        -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+        opacity: 0; visibility: hidden; transform: translateY(-12px);
+        transition: opacity var(--t), transform var(--t), visibility 0s linear .25s;
+      }
+      .nav.is-open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+      .nav__list { flex-direction: column; align-items: stretch; gap: 0; }
+      .nav__link { display: block; padding: 20px 0; font-size: 1.15rem; border-bottom: 1px solid var(--border); color: var(--text); }
+      .nav__link::after { display: none; }
+      .nav__link.is-active { color: var(--accent); }
+      .nav__cta-mobile { display: block; margin-top: 28px; }
+    }
+
+    /* ==========================================================
+       3. HERO
+       ========================================================== */
+    .hero {
+      position: relative; isolation: isolate; overflow: hidden;
+      min-height: 100vh; min-height: 100svh;
+      display: flex; align-items: flex-end;
+      padding: calc(var(--header-h) + 56px) 0 clamp(36px, 6vw, 64px);
+      background: var(--bg);
+    }
+    .hero__bg { position: absolute; inset: 0; z-index: -3; }
+    .hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center; filter: grayscale(.2) contrast(1.05) brightness(.7); }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; z-index: -2;
+      background:
+        linear-gradient(90deg, rgba(13, 15, 18, .96) 0%, rgba(13, 15, 18, .72) 45%, rgba(13, 15, 18, .25) 100%),
+        linear-gradient(180deg, rgba(13, 15, 18, .55) 0%, rgba(13, 15, 18, 0) 30%, var(--bg) 100%);
+    }
+    .hero::after {  /* индустриальная сетка */
+      content: ""; position: absolute; inset: 0; z-index: -1; opacity: .5; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+      background-size: 64px 64px;
+      -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 80%);
+              mask-image: linear-gradient(180deg, #000 0%, transparent 80%);
+    }
+    .hero__inner { width: 100%; display: flex; flex-direction: column; gap: clamp(40px, 7vw, 80px); }
+    .hero__content { max-width: 800px; }
+    .hero__title { margin: 22px 0 22px; font-size: clamp(2.2rem, 6.4vw, 5rem); font-weight: 900; line-height: 1.02; }
+    .hero__title .accent { display: inline-block; }
+    .hero__lead { max-width: 56ch; font-size: clamp(1rem, 1.6vw, 1.2rem); color: #C3CAD6; }
+    .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+
+    .hero__stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      background: rgba(22, 25, 31, .72); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); overflow: hidden;
+    }
+    .hero__stats .stat { padding: clamp(18px, 3vw, 30px); }
+    .hero__stats .stat + .stat { border-left: 1px solid var(--border); }
+    @media (max-width: 640px) {
+      .hero__stats { grid-template-columns: 1fr; }
+      .hero__stats .stat + .stat { border-left: 0; border-top: 1px solid var(--border); }
+      .hero__actions .btn { flex: 1 1 100%; }
+    }
+
+    /* ==========================================================
+       4. ФУТЕР
+       ========================================================== */
+    .footer { background: var(--bg-alt); border-top: 1px solid var(--border); padding-top: var(--section-y); position: relative; }
+    .footer::before { content: ""; position: absolute; top: -1px; left: 0; width: 160px; height: 3px; background: var(--accent); }
+    .footer__grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+    @media (max-width: 900px) { .footer__grid { grid-template-columns: 1fr; } }
+
+    .footer__lead { margin: 18px 0 32px; color: var(--text-muted); max-width: 46ch; }
+    .footer__info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 24px; }
+    @media (max-width: 520px) { .footer__info { grid-template-columns: 1fr; } }
+    .footer__block h3 { font-family: var(--font-body); font-size: .74rem; font-weight: 700; letter-spacing: .18em; color: var(--accent); margin-bottom: 12px; }
+    .footer__block li, .footer__block address { font-style: normal; color: var(--text-muted); font-size: .95rem; }
+    .footer__block li + li { margin-top: 6px; }
+    .footer__block a { color: var(--text); transition: color var(--t); }
+    .footer__block a:hover { color: var(--accent); }
+    .footer__block strong { color: var(--text); font-weight: 600; }
+
+    .social { display: flex; gap: 10px; margin-top: 4px; }
+    .social__link {
+      width: 46px; height: 46px; display: grid; place-items: center;
+      border: 1px solid var(--border-strong); border-radius: var(--radius-sm); color: var(--text);
+      transition: background var(--t), color var(--t), border-color var(--t), transform var(--t);
+    }
+    .social__link:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: translateY(-3px); }
+    .social__link svg { width: 20px; height: 20px; }
+
+    .booking { padding: clamp(24px, 4vw, 40px); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+    .booking__title { font-size: clamp(1.3rem, 2.6vw, 1.7rem); margin: 14px 0 8px; }
+    .booking__lead { color: var(--text-muted); font-size: .95rem; margin-bottom: 24px; }
+    .form { display: grid; gap: 6px; }
+    .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+    @media (max-width: 520px) { .form__row { grid-template-columns: 1fr; } }
+    .form__note { margin-top: 12px; font-size: .78rem; color: var(--text-dim); text-align: center; }
+
+    .footer__bottom {
+      margin-top: var(--section-y); padding: 24px 0; border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between;
+      font-size: .82rem; color: var(--text-dim);
+    }
+    .footer__bottom a:hover { color: var(--accent); }
+
+    /* ==========================================================
+       5. МОДАЛЬНОЕ ОКНО
+       ========================================================== */
+    .modal {
+      position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 20px;
+      opacity: 0; visibility: hidden; transition: opacity var(--t), visibility 0s linear .25s;
+    }
+    .modal.is-open { opacity: 1; visibility: visible; transition-delay: 0s; }
+    .modal__backdrop { position: absolute; inset: 0; background: rgba(5, 6, 8, .78); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .modal__dialog {
+      position: relative; width: 100%; max-width: 460px; text-align: center;
+      padding: clamp(32px, 5vw, 48px) clamp(24px, 4vw, 40px);
+      background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow), 0 0 80px rgba(200, 255, 46, .08);
+      transform: translateY(24px) scale(.97); transition: transform .35s var(--ease);
+    }
+    .modal.is-open .modal__dialog { transform: none; }
+    .modal__close {
+      position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; display: grid; place-items: center;
+      background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-muted);
+      transition: color var(--t), border-color var(--t);
+    }
+    .modal__close:hover { color: var(--accent); border-color: var(--accent); }
+    .modal__close svg { width: 18px; height: 18px; }
+    .modal__icon {
+      width: 76px; height: 76px; margin: 0 auto 22px; display: grid; place-items: center;
+      border-radius: 50%; background: var(--accent); color: var(--accent-ink);
+      box-shadow: 0 0 0 10px var(--accent-soft);
+    }
+    .modal__icon svg { width: 38px; height: 38px; }
+    .modal__title { font-size: 1.5rem; margin-bottom: 12px; }
+    .modal__text { color: var(--text-muted); margin-bottom: 28px; }
+    .modal__text strong { color: var(--text); }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#top" class="logo" aria-label="IRON PULSE — на главную">
+        <svg class="logo__mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="9" fill="#C8FF2E"/>
+          <path d="M4 19h7l3-9 5 17 4-12 2 4h7" stroke="#0D0F12" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>IRON <b>PULSE</b></span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Основная навигация">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#zones">Направления</a></li>
+          <li><a class="nav__link" href="#calculator">Калькулятор</a></li>
+          <li><a class="nav__link" href="#pricing">Абонементы</a></li>
+          <li><a class="nav__link" href="#trainers">Тренеры</a></li>
+          <li><a class="nav__link" href="#contacts">Контакты</a></li>
+        </ul>
+        <div class="nav__cta-mobile">
+          <a href="#booking" class="btn btn--lg btn--block">Пробная тренировка</a>
+        </div>
+      </nav>
+
+      <div class="header__actions">
+        <a href="#booking" class="btn btn--sm header__cta">Пробная тренировка</a>
+        <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero__bg">
+        <!-- Фото: Unsplash (бесплатная лицензия). Прямая ссылка проверена, отвечает 200 -->
+        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1920&q=80"
+             alt="" width="1920" height="1440" fetchpriority="high" decoding="async">
+      </div>
+
+      <div class="container hero__inner">
+        <div class="hero__content">
+          <span class="badge badge--dot">Минск · пр-т Победителей, 100</span>
+          <h1 class="hero__title" id="hero-title">Прокачай себя <span class="accent">на максимум</span></h1>
+          <p class="hero__lead">
+            IRON PULSE — фитнес-клуб нового формата: премиальное оборудование, сильные тренеры
+            и атмосфера, в которой хочется работать на результат. Первая гостевая тренировка — бесплатно.
+          </p>
+          <div class="hero__actions">
+            <a href="#booking" class="btn btn--lg">Пробная тренировка</a>
+            <a href="#calculator" class="btn btn--lg btn--ghost">Подобрать программу</a>
+          </div>
+        </div>
+
+        <div class="hero__stats" role="list">
+          <div class="stat" role="listitem">
+            <span class="stat__value">2 500<span class="accent">м²</span></span>
+            <span class="stat__label">Зал, кардио- и функциональные зоны</span>
+          </div>
+          <div class="stat" role="listitem">
+            <span class="stat__value">24<span class="accent">/</span>7</span>
+            <span class="stat__label">Круглосуточный доступ по клубной карте</span>
+          </div>
+          <div class="stat" role="listitem">
+            <span class="stat__value">40<span class="accent">+</span></span>
+            <span class="stat__label">Тренажёров Technogym</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ЗОНЫ И НАПРАВЛЕНИЯ ===================== -->
+    <section class="section" id="zones" aria-labelledby="zones-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__eyebrow">01 · Клуб</span>
+          <h2 class="section__title" id="zones-title">Зоны и направления</h2>
+          <p class="section__lead">Пространство IRON PULSE собрано вокруг одной идеи: тренироваться с удовольствием и видеть результат в каждом движении. Выберите направление, которое подходит именно вам.</p>
+        </div>
+
+        <div class="grid grid--4 section__slot" id="zones-grid">
+          <article class="card card--hover"><span class="badge">Сила</span><h3 class="card__title">Тренажёрный зал</h3><p class="card__text">Свободные веса и тренажёры Technogym для точной работы над силой и формой. Пространство подходит новичкам и опытным атлетам.</p><div class="card__meta"><span class="badge badge--outline">1 200 м² · 24/7</span></div></article>
+          <article class="card card--hover"><span class="badge">Функционал</span><h3 class="card__title">Кроссфит-арена</h3><p class="card__text">Открытая зона для интенсивных комплексов, работы с весом тела и командных тренировок. Тренеры помогут безопасно наращивать выносливость.</p><div class="card__meta"><span class="badge badge--outline">420 м² · 06:00–23:00</span></div></article>
+          <article class="card card--hover"><span class="badge">Техника</span><h3 class="card__title">Зона единоборств</h3><p class="card__text">Ринг, татами и мешки для бокса, MMA и общей физической подготовки. Занятия развивают реакцию, координацию и уверенность.</p><div class="card__meta"><span class="badge badge--outline">280 м² · 07:00–23:00</span></div></article>
+          <article class="card card--hover"><span class="badge">Восстановление</span><h3 class="card__title">SPA и финская сауна</h3><p class="card__text">Перезагрузитесь после тренировки в уютной SPA-зоне и финской сауне. Тепло помогает расслабить мышцы и восстановить силы.</p><div class="card__meta"><span class="badge badge--outline">09:00–23:00 ежедневно</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== КАЛЬКУЛЯТОР ===================== -->
+    <section class="section section--alt" id="calculator" aria-labelledby="calculator-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__eyebrow">02 · Программа</span>
+          <h2 class="section__title" id="calculator-title">Калькулятор: ИМТ и калории</h2>
+          <p class="section__lead">Введите свои параметры — калькулятор оценит ИМТ, суточную потребность в энергии и количество белка для вашей цели.</p>
+        </div>
+
+        <div class="grid grid--2 section__slot" id="calculator-grid">
+          <form class="card" id="calculation-form">
+            <div class="field"><label class="field__label" for="calc-sex">Пол</label><select class="select" id="calc-sex" name="sex"><option value="male">Мужчина</option><option value="female">Женщина</option></select></div>
+            <div class="field"><label class="field__label" for="calc-age">Возраст, лет</label><input class="input" id="calc-age" name="age" type="number" min="14" max="80" value="30" inputmode="numeric"></div>
+            <div class="field"><label class="field__label" for="calc-height">Рост, см</label><input class="input" id="calc-height" name="height" type="number" min="130" max="220" value="175" inputmode="numeric"></div>
+            <div class="field"><label class="field__label" for="calc-weight">Вес, кг</label><input class="input" id="calc-weight" name="weight" type="number" min="35" max="200" value="75" step="0.1" inputmode="decimal"></div>
+            <div class="field"><label class="field__label" for="calc-activity">Уровень активности</label><select class="select" id="calc-activity" name="activity"><option value="1.2">Минимальная</option><option value="1.375">Лёгкая, 1–3 раза в неделю</option><option value="1.55" selected>Средняя, 3–5 раз в неделю</option><option value="1.725">Высокая, 6–7 раз в неделю</option><option value="1.9">Профессиональная</option></select></div>
+            <div class="field"><label class="field__label" for="calc-goal">Цель</label><select class="select" id="calc-goal" name="goal"><option value="loss">Похудение</option><option value="maintain" selected>Поддержание</option><option value="gain">Набор массы</option></select></div>
+          </form>
+          <div class="card"><div class="result" aria-live="polite"><span class="badge">Ваш результат</span><p class="card__text">Индекс массы тела</p><strong class="result__value" id="calc-bmi">—</strong><p class="card__text" id="calc-bmi-text">Заполните параметры</p><p class="card__text">Дневная норма калорий: <strong id="calc-calories">—</strong> ккал</p><p class="card__text">Норма белка: <strong id="calc-protein">—</strong> г в день</p><p class="card__text" id="calc-recommendation">Рекомендуемое направление: тренажёрный зал</p><a class="btn" href="#booking">Записаться на программу</a></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ТАРИФЫ ===================== -->
+    <section class="section" id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section__head section__head--center">
+          <span class="section__eyebrow">03 · Абонементы</span>
+          <h2 class="section__title" id="pricing-title">Тарифы и абонементы</h2>
+          <p class="section__lead">Выберите формат доступа под свой ритм. При оплате года вы экономите 20% и получаете больше свободы для регулярных тренировок.</p>
+        </div>
+        <div class="switch" aria-label="Период оплаты"><button class="switch__btn is-active" type="button" data-period="month" aria-pressed="true">Месяц</button><button class="switch__btn" type="button" data-period="year" aria-pressed="false">Год со скидкой 20%</button></div>
+        <div class="grid grid--3 section__slot" id="pricing-grid">
+          <article class="card card--hover"><h3 class="card__title">Старт</h3><div class="price"><span class="price__value" data-month="110" data-year="1056">110</span><span class="price__unit">BYN / мес</span><span class="price__old" data-month-old="" data-year-old="1320"></span></div><ul class="list-check"><li>Доступ в тренажёрный зал</li><li>Вводная консультация</li><li>Мобильное приложение клуба</li></ul><a class="btn" href="#booking">Выбрать тариф</a></article>
+          <article class="card card--accent card--hover"><span class="badge badge--solid">Хит</span><h3 class="card__title">Безлимит</h3><div class="price"><span class="price__value" data-month="165" data-year="1584">165</span><span class="price__unit">BYN / мес</span><span class="price__old" data-month-old="" data-year-old="1980"></span></div><ul class="list-check"><li>Доступ во все зоны 24/7</li><li>2 гостевых визита в месяц</li><li>Скидка 10% на персональные тренировки</li></ul><a class="btn" href="#booking">Выбрать тариф</a></article>
+          <article class="card card--hover"><h3 class="card__title">VIP All Inclusive</h3><div class="price"><span class="price__value" data-month="290" data-year="2784">290</span><span class="price__unit">BYN / мес</span><span class="price__old" data-month-old="" data-year-old="3480"></span></div><ul class="list-check"><li>Все зоны и SPA без ограничений</li><li>4 персональные тренировки</li><li>Полотенце и персональный шкафчик</li></ul><a class="btn" href="#booking">Выбрать тариф</a></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ТРЕНЕРЫ ===================== -->
+    <section class="section section--alt" id="trainers" aria-labelledby="trainers-title">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__eyebrow">04 · Команда</span>
+          <h2 class="section__title" id="trainers-title">Команда топ-тренеров</h2>
+          <p class="section__lead">Тренеры IRON PULSE соединяют спортивную экспертизу, внимательное сопровождение и понятный план прогресса для каждого уровня подготовки.</p>
+        </div>
+        <div class="grid grid--3 section__slot" id="trainers-grid">
+          <article class="card card--hover"><svg class="avatar" viewBox="0 0 88 88" role="img" aria-label="Алексей Петров"><circle cx="44" cy="44" r="42" fill="#1D2129"/><text x="44" y="52" text-anchor="middle" fill="#C8FF2E" font-family="Inter, sans-serif" font-size="24" font-weight="700">АП</text></svg><h3 class="card__title">Алексей Петров</h3><span class="badge">Силовой тренинг</span><p class="card__text">Помогает выстроить сильное тело и уверенную технику без лишней гонки за весами. Стаж — 12 лет.</p><div class="chip-list"><span class="chip">КМС по пауэрлифтингу</span><span class="chip">NSCA-CPT</span><span class="chip">12 лет опыта</span></div><div class="card__meta"><a class="btn btn--ghost btn--sm" href="#booking">Записаться к тренеру</a></div></article>
+          <article class="card card--hover"><svg class="avatar" viewBox="0 0 88 88" role="img" aria-label="Мария Ковалёва"><circle cx="44" cy="44" r="42" fill="#1D2129"/><text x="44" y="52" text-anchor="middle" fill="#C8FF2E" font-family="Inter, sans-serif" font-size="24" font-weight="700">МК</text></svg><h3 class="card__title">Мария Ковалёва</h3><span class="badge">Функциональный тренинг</span><p class="card__text">Составляет динамичные программы для выносливости, мобильности и комфортного снижения веса. Стаж — 9 лет.</p><div class="chip-list"><span class="chip">Мастер спорта</span><span class="chip">CrossFit Level 2</span><span class="chip">9 лет опыта</span></div><div class="card__meta"><a class="btn btn--ghost btn--sm" href="#booking">Записаться к тренеру</a></div></article>
+          <article class="card card--hover"><svg class="avatar" viewBox="0 0 88 88" role="img" aria-label="Дмитрий Орлов"><circle cx="44" cy="44" r="42" fill="#1D2129"/><text x="44" y="52" text-anchor="middle" fill="#C8FF2E" font-family="Inter, sans-serif" font-size="24" font-weight="700">ДО</text></svg><h3 class="card__title">Дмитрий Орлов</h3><span class="badge">Бокс и единоборства</span><p class="card__text">Развивает технику, скорость и характер на персональных и групповых занятиях. Стаж — 15 лет.</p><div class="chip-list"><span class="chip">КМС по боксу</span><span class="chip">Мастер спорта</span><span class="chip">15 лет опыта</span></div><div class="card__meta"><a class="btn btn--ghost btn--sm" href="#booking">Записаться к тренеру</a></div></article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer" id="contacts">
+    <div class="container">
+      <div class="footer__grid">
+
+        <div class="footer__about">
+          <a href="#top" class="logo" aria-label="IRON PULSE — наверх">
+            <svg class="logo__mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <rect width="36" height="36" rx="9" fill="#C8FF2E"/>
+              <path d="M4 19h7l3-9 5 17 4-12 2 4h7" stroke="#0D0F12" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>IRON <b>PULSE</b></span>
+          </a>
+          <p class="footer__lead">Фитнес-клуб в Минске для тех, кто выбирает результат. Приходите на бесплатную гостевую тренировку и почувствуйте свой пульс.</p>
+
+          <div class="footer__info">
+            <div class="footer__block">
+              <h3>Адрес</h3>
+              <address>г. Минск,<br>пр-т Победителей, 100</address>
+            </div>
+            <div class="footer__block">
+              <h3>Контакты</h3>
+              <ul>
+                <li><a href="tel:+375170000000">+375 (17) 000-00-00</a></li>
+                <li><a href="tel:+375290000000">+375 (29) 000-00-00</a></li>
+                <li><a href="mailto:hello@ironpulse.by">hello@ironpulse.by</a></li>
+              </ul>
+            </div>
+            <div class="footer__block">
+              <h3>Режим работы</h3>
+              <ul>
+                <li><strong>Зал:</strong> 24/7 по клубной карте</li>
+                <li><strong>Ресепшн:</strong> 07:00–23:00</li>
+                <li><strong>SPA и сауна:</strong> 09:00–23:00</li>
+              </ul>
+            </div>
+            <div class="footer__block">
+              <h3>Мы в соцсетях</h3>
+              <div class="social">
+                <a class="social__link" href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".9" fill="currentColor"/></svg>
+                </a>
+                <a class="social__link" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4 3 11l5.5 2L10 19l3-3.5L18 20z"/><path d="m8.5 13 9-6.5"/></svg>
+                </a>
+                <a class="social__link" href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="m10 9.5 5 2.5-5 2.5z" fill="currentColor"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking" id="booking">
+          <span class="badge">Бесплатно</span>
+          <h2 class="booking__title">Запишитесь на гостевую тренировку</h2>
+          <p class="booking__lead">Оставьте контакты — администратор свяжется с вами в течение 30 минут и подберёт удобное время.</p>
+
+          <form class="form" id="booking-form" novalidate>
+            <div class="form__row">
+              <div class="field" data-field="name">
+                <label class="field__label" for="f-name">Имя</label>
+                <input class="input" id="f-name" name="name" type="text" autocomplete="given-name" placeholder="Как к вам обращаться" maxlength="40" required aria-describedby="e-name">
+                <span class="field__error" id="e-name" role="alert"></span>
+              </div>
+              <div class="field" data-field="phone">
+                <label class="field__label" for="f-phone">Телефон</label>
+                <input class="input" id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+375 (29) 123-45-67" required aria-describedby="e-phone">
+                <span class="field__error" id="e-phone" role="alert"></span>
+              </div>
+            </div>
+
+            <div class="field" data-field="goal">
+              <label class="field__label" for="f-goal">Направление</label>
+              <select class="select" id="f-goal" name="goal" required aria-describedby="e-goal">
+                <option value="">Выберите направление</option>
+                <option value="gym">Тренажёрный зал</option>
+                <option value="crossfit">Кроссфит</option>
+                <option value="martial">Единоборства</option>
+                <option value="spa">SPA и сауна</option>
+                <option value="unknown">Пока не знаю — нужна консультация</option>
+              </select>
+              <span class="field__error" id="e-goal" role="alert"></span>
+            </div>
+
+            <div class="field" data-field="agree">
+              <label class="check">
+                <input type="checkbox" id="f-agree" name="agree" required aria-describedby="e-agree">
+                <span>Согласен(а) на обработку персональных данных и получение звонка от клуба</span>
+              </label>
+              <span class="field__error" id="e-agree" role="alert"></span>
+            </div>
+
+            <button type="submit" class="btn btn--lg btn--block">Записаться бесплатно</button>
+            <p class="form__note">Без обязательств и предоплаты</p>
+          </form>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <span>© <span id="year">2025</span> IRON PULSE. Вымышленный фитнес-клуб, все совпадения случайны.</span>
+        <span>Минск, пр-т Победителей, 100</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== MODAL «ЗАЯВКА ПРИНЯТА» ===================== -->
+  <div class="modal" id="success-modal" aria-hidden="true">
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-text" tabindex="-1">
+      <button class="modal__close" type="button" data-modal-close aria-label="Закрыть окно">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="modal__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h2 class="modal__title" id="modal-title">Заявка принята</h2>
+      <p class="modal__text" id="modal-text">Спасибо, <strong id="modal-name">друг</strong>! Мы свяжемся с вами в течение 30 минут, чтобы согласовать время бесплатной тренировки.</p>
+      <button class="btn btn--block" type="button" data-modal-close>Отлично</button>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var $  = function (s, c) { return (c || document).querySelector(s); };
+    var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+
+    var body    = document.body;
+    var header  = $('#header');
+    var nav     = $('#nav');
+    var burger  = $('#burger');
+    var modal   = $('#success-modal');
+    var mqMobile = window.matchMedia('(max-width: 960px)');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    $('#year').textContent = new Date().getFullYear();
+
+    /* ---------- Блокировка прокрутки ---------- */
+    function updateLock() {
+      var menuOpen = nav.classList.contains('is-open');
+      var modalOpen = modal.classList.contains('is-open');
+      body.classList.toggle('is-locked', menuOpen || modalOpen);
+    }
+
+    /* ---------- Мобильное меню ---------- */
+    function setMenu(open) {
+      nav.classList.toggle('is-open', open);
+      header.classList.toggle('is-open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+      updateLock();
+    }
+    burger.addEventListener('click', function () {
+      setMenu(!nav.classList.contains('is-open'));
+    });
+    mqMobile.addEventListener('change', function (e) { if (!e.matches) setMenu(false); });
+
+    /* ---------- Шапка при прокрутке ---------- */
+    function onScroll() { header.classList.toggle('is-scrolled', window.scrollY > 24); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ---------- Плавный скролл по якорям ---------- */
+    $$('a[href^="#"]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        var hash = link.getAttribute('href');
+        if (hash.length < 2) return;
+        var target = document.getElementById(hash.slice(1));
+        if (!target) return;
+        e.preventDefault();
+        if (nav.classList.contains('is-open')) setMenu(false);
+        target.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start' });
+        if (history.pushState) history.pushState(null, '', hash);
+        if (hash === '#booking') {
+          setTimeout(function () { $('#f-name').focus({ preventScroll: true }); }, reduceMotion.matches ? 0 : 650);
+        }
+      });
+    });
+
+    /* ---------- Подсветка активного пункта меню ---------- */
+    var navLinks = $$('.nav__link');
+    if ('IntersectionObserver' in window) {
+      var map = {};
+      navLinks.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          navLinks.forEach(function (a) { a.classList.remove('is-active'); });
+          if (map[en.target.id]) map[en.target.id].classList.add('is-active');
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      Object.keys(map).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) io.observe(el);
+      });
+      var topEl = $('#top');
+      if (topEl) new IntersectionObserver(function (en) {
+        if (en[0].isIntersecting) navLinks.forEach(function (a) { a.classList.remove('is-active'); });
+      }, { rootMargin: '-45% 0px -50% 0px' }).observe(topEl);
+    }
+
+    /* ---------- Модальное окно ---------- */
+    var lastFocus = null;
+    function focusables() {
+      return $$('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', modal)
+        .filter(function (el) { return !el.disabled && el.offsetParent !== null; });
+    }
+    function openModal(name) {
+      lastFocus = document.activeElement;
+      $('#modal-name').textContent = name || 'друг';
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      updateLock();
+      setTimeout(function () { $('.modal__dialog', modal).focus(); }, 30);
+    }
+    function closeModal() {
+      if (!modal.classList.contains('is-open')) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      updateLock();
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    $$('[data-modal-close]', modal).forEach(function (el) { el.addEventListener('click', closeModal); });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if (modal.classList.contains('is-open')) closeModal();
+        else if (nav.classList.contains('is-open')) { setMenu(false); burger.focus(); }
+        return;
+      }
+      if (e.key === 'Tab' && modal.classList.contains('is-open')) {   // простая «ловушка» фокуса
+        var f = focusables();
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && (document.activeElement === first || document.activeElement === $('.modal__dialog', modal))) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+    });
+
+    /* ---------- Форма записи: маска телефона ---------- */
+    var form  = $('#booking-form');
+    var phone = $('#f-phone');
+
+    function phoneDigits(v) {                       // возвращает до 9 цифр национального номера
+      var d = v.replace(/\D/g, '');
+      if (d.indexOf('375') === 0) d = d.slice(3);
+      else if (d.indexOf('80') === 0) d = d.slice(2);
+      else if (d.length < 3 && '375'.indexOf(d) === 0) d = '';
+      return d.slice(0, 9);
+    }
+    function formatPhone(d) {
+      var p = '+375';
+      if (d.length > 0) p += ' (' + d.slice(0, 2);
+      if (d.length >= 2) p += ')';
+      if (d.length > 2) p += ' ' + d.slice(2, 5);
+      if (d.length > 5) p += '-' + d.slice(5, 7);
+      if (d.length > 7) p += '-' + d.slice(7, 9);
+      return p;
+    }
+    phone.addEventListener('focus', function () { if (!phone.value) phone.value = '+375 ('; });
+    phone.addEventListener('blur', function () { if (phoneDigits(phone.value).length === 0) phone.value = ''; });
+    phone.addEventListener('input', function (e) {
+      var d = phoneDigits(phone.value);
+      var deleting = e.inputType && e.inputType.indexOf('delete') === 0;
+      phone.value = (deleting && d.length === 0) ? '' : formatPhone(d);
+    });
+
+    /* ---------- Валидация ---------- */
+    var OPERATORS = ['17', '25', '29', '33', '44'];
+    var validators = {
+      name: function (v) {
+        v = v.trim();
+        if (!v) return 'Введите ваше имя';
+        if (!/^[\p{L}][\p{L}\s'’\-]{1,39}$/u.test(v)) return 'Только буквы, минимум 2 символа';
+        return '';
+      },
+      phone: function (v) {
+        var d = phoneDigits(v);
+        if (!d) return 'Введите номер телефона';
+        if (d.length < 9) return 'Номер неполный — нужно 9 цифр после +375';
+        if (OPERATORS.indexOf(d.slice(0, 2)) === -1) return 'Неверный код оператора (17, 25, 29, 33, 44)';
+        return '';
+      },
+      goal: function (v) { return v ? '' : 'Выберите направление'; },
+      agree: function (checked) { return checked ? '' : 'Нужно ваше согласие'; }
+    };
+
+    function getValue(name) {
+      var el = form.elements[name];
+      return name === 'agree' ? el.checked : el.value;
+    }
+    function showError(name, msg) {
+      var wrap = $('[data-field="' + name + '"]', form);
+      var el = form.elements[name];
+      wrap.classList.toggle('has-error', !!msg);
+      $('.field__error', wrap).textContent = msg;
+      if (msg) el.setAttribute('aria-invalid', 'true'); else el.removeAttribute('aria-invalid');
+    }
+    function validateField(name) {
+      var msg = validators[name](getValue(name));
+      showError(name, msg);
+      return !msg;
+    }
+
+    Object.keys(validators).forEach(function (name) {
+      var el = form.elements[name];
+      el.addEventListener('blur', function () {
+        if (name === 'phone' && phoneDigits(el.value).length === 0) return showError(name, '');
+        if (el.value || name === 'agree') validateField(name);
+      });
+      el.addEventListener(name === 'agree' || name === 'goal' ? 'change' : 'input', function () {
+        if ($('[data-field="' + name + '"]', form).classList.contains('has-error')) validateField(name);
+      });
+    });
+
+    /* ---------- Калькулятор и тарифы ---------- */
+    var calcForm = $('#calculation-form');
+    if (calcForm) {
+      var calcFields = ['sex', 'age', 'height', 'weight', 'activity', 'goal'].map(function (name) { return calcForm.elements[name]; });
+      function calculate() {
+        var age = Number(calcForm.elements.age.value), height = Number(calcForm.elements.height.value), weight = Number(calcForm.elements.weight.value);
+        var valid = age >= 14 && age <= 80 && height >= 130 && height <= 220 && weight >= 35 && weight <= 200;
+        if (!valid) { $('#calc-bmi').textContent = '—'; $('#calc-bmi-text').textContent = 'Проверьте диапазоны: 14–80 лет, 130–220 см, 35–200 кг'; $('#calc-calories').textContent = '—'; $('#calc-protein').textContent = '—'; return; }
+        var bmi = weight / Math.pow(height / 100, 2), bmiText = bmi < 18.5 ? 'Недовес' : bmi < 25 ? 'Норма' : bmi < 30 ? 'Избыток веса' : 'Ожирение';
+        var bmr = calcForm.elements.sex.value === 'male' ? 10 * weight + 6.25 * height - 5 * age + 5 : 10 * weight + 6.25 * height - 5 * age - 161;
+        var calories = Math.round(bmr * Number(calcForm.elements.activity.value)), goal = calcForm.elements.goal.value;
+        if (goal === 'loss') calories -= 300; if (goal === 'gain') calories += 300;
+        $('#calc-bmi').textContent = bmi.toFixed(1); $('#calc-bmi-text').textContent = bmiText + ' (здоровый диапазон: 18,5–24,9)'; $('#calc-calories').textContent = calories; $('#calc-protein').textContent = Math.round(weight * (goal === 'gain' ? 1.8 : 1.6));
+        $('#calc-recommendation').textContent = 'Рекомендуемое направление: ' + (goal === 'loss' ? 'кроссфит-арена' : goal === 'gain' ? 'тренажёрный зал' : 'функциональный тренинг');
+      }
+      calcFields.forEach(function (field) { field.addEventListener('input', calculate); field.addEventListener('change', calculate); }); calculate();
+    }
+    var periodButtons = $$('[data-period]');
+    periodButtons.forEach(function (button) { button.addEventListener('click', function () {
+      var period = button.getAttribute('data-period');
+      periodButtons.forEach(function (item) { item.classList.toggle('is-active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
+      $$('#pricing-grid .price__value').forEach(function (price) { price.textContent = price.getAttribute('data-' + period); });
+      $$('#pricing-grid .price__old').forEach(function (old) { old.textContent = period === 'year' ? old.getAttribute('data-year-old') + ' BYN' : ''; });
+    }); });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var firstInvalid = null;
+      Object.keys(validators).forEach(function (name) {
+        if (!validateField(name) && !firstInvalid) firstInvalid = form.elements[name];
+      });
+      if (firstInvalid) { firstInvalid.focus(); return; }
+
+      var payload = {
+        name: form.elements.name.value.trim(),
+        phone: '+375' + phoneDigits(phone.value),
+        goal: form.elements.goal.value
+      };
+      // TODO: отправка на бэкенд, например:
+      // fetch('/api/guest-visit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      openModal(payload.name);
+      form.reset();
+      Object.keys(validators).forEach(function (n) { showError(n, ''); });
+    });
+
+  })();
+  </script>
+</body>
+</html>
